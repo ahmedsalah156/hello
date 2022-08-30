@@ -5,6 +5,7 @@ import array
 
 #taking the i/p from the user
 mx1=input('enter the first in the format [a b c;d e f] and (;) stands for a new row  ')
+operation=input('enter the type of operation : add(+) , subtraction(-) , multiplication(*) , inverse(-1)')
 mx2=input('enter the second in the format [a b c;d e f] and (;) stands for a new row  ')
 
 if mx1[0]=='[' and mx1[len(mx1)-1]==']' and mx2[0]=='[' and mx2[len(mx2)-1]==']':
@@ -126,6 +127,9 @@ if mx1[0]=='[' and mx1[len(mx1)-1]==']' and mx2[0]=='[' and mx2[len(mx2)-1]==']'
             z = 'error'
         return z
 
+    if operation=='+':
+        print('sum is')
+        print(sum_matrix(mx5,mx6))
 
     # function to subtract two matrices
     def subtract_matrix(m1, m2):
@@ -134,6 +138,9 @@ if mx1[0]=='[' and mx1[len(mx1)-1]==']' and mx2[0]=='[' and mx2[len(mx2)-1]==']'
         else:
             z = 'error'
         return z
+    if operation=='-':
+        print('subtraction is')
+        print(subtract_matrix(mx5,mx6))
 
 
     # multiplication of two matrices of 2*2
@@ -152,37 +159,38 @@ if mx1[0]=='[' and mx1[len(mx1)-1]==']' and mx2[0]=='[' and mx2[len(mx2)-1]==']'
     no_rows2 = rows(mx2)
     no_col2 = coloums(mx2)
 
-    # the if condition to make sure that the condition for multiplication is atisfied
-    if no_col1 == no_rows2:
-        for x in mx1:
-            # condition to detect the no of rows
-            if i >= no_rows1:
-                break
-            else:
-                for y in mx1:
-                    # condition to detect the no of coloums
-                    if j >= no_col2:
-                        # for each time we finsh the coloums for the first row for example we have to make j equal zero to repeat the same operation for the second row in the first with the coloums in the second
-                        j = 0
-                        break
-                    else:
-                        for z0 in mx1:
-                            # first multiply each elemnt of the tow matrix and thend add them to zeros matrix then repeat the same operation for the second elemnt then add it to the first that we have calculated
-                            # we first deal with the first row and we use (i) to represent it
-                            # we then used k to represent the elemnt index in each row and coloum
-                            # it is a must that the no of elemnt in each row in the first martix to equal the no of elemnt in each colom in the second matrix
-                            if k < no_col1:
-                                multi_result = mx5[i, k] * mx6[k, j]
-                                zero[i, j] = multi_result + zero[i, j]
-                                k = k + 1
-                            else:
-                                k = 0
-                                break
+    if operation=='*':
+        # the if condition to make sure that the condition for multiplication is atisfied
+        if no_col1 == no_rows2:
+            for x in mx1:
+                # condition to detect the no of rows
+                if i >= no_rows1:
+                    break
+                else:
+                    for y in mx1:
+                        # condition to detect the no of coloums
+                        if j >= no_col2:
+                            # for each time we finsh the coloums for the first row for example we have to make j equal zero to repeat the same operation for the second row in the first with the coloums in the second
+                            j = 0
+                            break
+                        else:
+                            for z0 in mx1:
+                                # first multiply each elemnt of the tow matrix and thend add them to zeros matrix then repeat the same operation for the second elemnt then add it to the first that we have calculated
+                                # we first deal with the first row and we use (i) to represent it
+                                # we then used k to represent the elemnt index in each row and coloum
+                                # it is a must that the no of elemnt in each row in the first martix to equal the no of elemnt in each colom in the second matrix
+                                if k < no_col1:
+                                    multi_result = mx5[i, k] * mx6[k, j]
+                                    zero[i, j] = multi_result + zero[i, j]
+                                    k = k + 1
+                                else:
+                                    k = 0
+                                    break
 
-                    j = j + 1
-                i = i + 1
-        else:
-            print('error....make sure the no of col of the first equal the no of rows for the second')
+                        j = j + 1
+                    i = i + 1
+            else:
+                print('error....make sure the no of col of the first equal the no of rows for the second')
 
 
     # function to calculate the determinant of 2*2 matrix
@@ -194,113 +202,115 @@ if mx1[0]=='[' and mx1[len(mx1)-1]==']' and mx2[0]=='[' and mx2[len(mx2)-1]==']'
         return det
 
 
+    if operation=='-1':
+        # initial conditions
+        i = 0
+        j = 0
+        n = 0
+        flag = 0
+        # define a zero matrix which will be used in condition (100) at line 169
+        result = np.zeros([no_col1, no_col1])
 
-    # initial conditions
-    i = 0
-    j = 0
-    n = 0
-    flag = 0
-    # define a zero matrix which will be used in condition (100) at line 169
-    result = np.zeros([no_col1, no_col1])
+        # (100) condition here to make sure the matrix is a square matrix
+        if no_col1 == no_rows1:
 
-    # (100) condition here to make sure the matrix is a square matrix
-    if no_col1 == no_rows1:
+            # if the input matrix is 2*2
+            if no_col1 == 2:
+                # determenant
+                determenant = determ(mx5)
 
-        #if the input matrix is 2*2
-        if no_col1==2:
-            #determenant
-            determenant=determ(mx5)
-
-            #adj matrix
-            result[0,0]=mx5[1,1]
-            result[0,1]=-1*mx5[0,1]
-            result[1,0]=-1*mx5[1,0]
-            result[1,1]=mx5[0,0]
-            #inverse matrix
-            inverse=(1/determenant)*result
-            print(inverse)
-        else:
-            # define unity matrix
-            unity = np.zeros([no_col1, no_col1])
-            for x in mx1:
-                # condition to detect the no of rows
-                if i >= no_col1:
-                    break
-                else:
-                    # in each time we add one according to I ...for example the first time equal zero and the second time equals ones ...etc
-                    unity[i, i] = unity[i, i] + 1
-                    i = i + 1
-
-            i = 0
-            j = 0
-            for x in mx1:
-                # condition to defint the end of coloums in the matrix
-                if j > no_col1 - 2:
-                    break
-                else:
-                    for y in mx1:
-                        if i >= no_col1 - 1 - j:
-                            i = 0
-                            break
-                        else:
-                            # condition to dtect
-                            if (mx5[j, j] > 0 and mx5[j + i + 1, j] > 0) or (mx5[j, j] < 0 and mx5[j + i + 1, j] < 0):
-                                s = -1
-                            else:
-                                s = 1
-                            unity[i + j + 1] = s * mx5[i + j + 1, j] * unity[j] + mx5[j, j] * unity[i + j + 1]
-                            mx5[i + j + 1] = s * mx5[i + j + 1, j] * mx5[j] + mx5[j, j] * mx5[i + j + 1]
-
-                            i = i + 1
-                    j = j + 1
-
-            i = 0
-            j = 0
-            k = 0
-
-            for x in mx1:
-                if mx5[no_col1 - 1, no_col1 - 1] == 0:
-                    flag = 1
-                    break
-                # condition to gurantee that in each time we will deal with one coloume only from the unity matrix with mx5 (look at the note book for more detailes)
-                if k > no_col1 - 1:
-                    break
-                else:
-                    result[no_col1 - 1, k] = unity[no_col1 - 1, k] / mx5[no_col1 - 1, no_col1 - 1]
-
-                    for y in mx1:
-                        if i >= no_col1 - 1:
-                            i = 0
-                            break
-                        else:
-                            for z in mx1:
-                                # condition to gurantee we will loop for no of times equal to the no of non zero element - 1
-                                if j > i:
-                                    j = 0
-                                    break
-                                else:
-                                    # to multiply the element in mx5 by the elemnt that we stored in result and add them together in each time
-                                    result[no_col1 - i - 2, k] = mx5[no_col1 - i - 2, no_col1 - j - 1] * result[
-                                        3 - j - 1, k] + result[no_col1 - i - 2, k]
-                                    j = j + 1
-                            # to subtract the last element we stored in result from the stored elemnt in unity
-                            result[no_col1 - i - 2, k] = -1 * result[no_col1 - i - 2, k] + unity[no_col1 - j - 2, k]
-                            result[no_col1 - i - 2, k] = result[no_col1 - i - 2, k] / mx5[
-                                no_col1 - i - 2, no_col1 - j - 2]
-                            i = i + 1
-
-                    k = k + 1
-
-            # condition happends only if there is a complete row of zeros
-            if flag == 1:
-                print('error because the matrix cnt be made in echelon form :')
-                print(mx5)
+                # adj matrix
+                result[0, 0] = mx5[1, 1]
+                result[0, 1] = -1 * mx5[0, 1]
+                result[1, 0] = -1 * mx5[1, 0]
+                result[1, 1] = mx5[0, 0]
+                # inverse matrix
+                inverse = (1 / determenant) * result
+                print(inverse)
             else:
-                print(result)
+                # define unity matrix
+                unity = np.zeros([no_col1, no_col1])
+                for x in mx1:
+                    # condition to detect the no of rows
+                    if i >= no_col1:
+                        break
+                    else:
+                        # in each time we add one according to I ...for example the first time equal zero and the second time equals ones ...etc
+                        unity[i, i] = unity[i, i] + 1
+                        i = i + 1
+
+                i = 0
+                j = 0
+                for x in mx1:
+                    # condition to defint the end of coloums in the matrix
+                    if j > no_col1 - 2:
+                        break
+                    else:
+                        for y in mx1:
+                            if i >= no_col1 - 1 - j:
+                                i = 0
+                                break
+                            else:
+                                # condition to dtect
+                                if (mx5[j, j] > 0 and mx5[j + i + 1, j] > 0) or (
+                                        mx5[j, j] < 0 and mx5[j + i + 1, j] < 0):
+                                    s = -1
+                                else:
+                                    s = 1
+                                unity[i + j + 1] = s * mx5[i + j + 1, j] * unity[j] + mx5[j, j] * unity[i + j + 1]
+                                mx5[i + j + 1] = s * mx5[i + j + 1, j] * mx5[j] + mx5[j, j] * mx5[i + j + 1]
+
+                                i = i + 1
+                        j = j + 1
+
+                i = 0
+                j = 0
+                k = 0
+
+                for x in mx1:
+                    if mx5[no_col1 - 1, no_col1 - 1] == 0:
+                        flag = 1
+                        break
+                    # condition to gurantee that in each time we will deal with one coloume only from the unity matrix with mx5 (look at the note book for more detailes)
+                    if k > no_col1 - 1:
+                        break
+                    else:
+                        result[no_col1 - 1, k] = unity[no_col1 - 1, k] / mx5[no_col1 - 1, no_col1 - 1]
+
+                        for y in mx1:
+                            if i >= no_col1 - 1:
+                                i = 0
+                                break
+                            else:
+                                for z in mx1:
+                                    # condition to gurantee we will loop for no of times equal to the no of non zero element - 1
+                                    if j > i:
+                                        j = 0
+                                        break
+                                    else:
+                                        # to multiply the element in mx5 by the elemnt that we stored in result and add them together in each time
+                                        result[no_col1 - i - 2, k] = mx5[no_col1 - i - 2, no_col1 - j - 1] * result[
+                                            3 - j - 1, k] + result[no_col1 - i - 2, k]
+                                        j = j + 1
+                                # to subtract the last element we stored in result from the stored elemnt in unity
+                                result[no_col1 - i - 2, k] = -1 * result[no_col1 - i - 2, k] + unity[no_col1 - j - 2, k]
+                                result[no_col1 - i - 2, k] = result[no_col1 - i - 2, k] / mx5[
+                                    no_col1 - i - 2, no_col1 - j - 2]
+                                i = i + 1
+
+                        k = k + 1
+
+                # condition happends only if there is a complete row of zeros
+                if flag == 1:
+                    print('error because the matrix cnt be made in echelon form :')
+                    print(mx5)
+                else:
+                    print(result)
 
 
-    else:
-        print('error no a square matrix'+'\n')
+        else:
+            print('error no a square matrix' + '\n')
+
 
 else:
     print('not a correct format')
